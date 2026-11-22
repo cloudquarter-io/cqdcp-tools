@@ -31,7 +31,8 @@ distributed control plane:
 This repository holds **release files only**. The source code is not here,
 and nothing in this repository needs to be built. Each binary is distributed
 under the licence of its own project: `cq` under the Apache License 2.0, the
-Terraform provider under the Mozilla Public License 2.0.
+Terraform provider under the Mozilla Public License 2.0. See
+[Licences](#licences).
 
 ## Releases
 
@@ -40,8 +41,8 @@ tag:
 
 | Tool | Tag | Release title | Files |
 |---|---|---|---|
-| `cq` | `cq/vX.Y.Z` | `cq X.Y.Z` | `cq-vX.Y.Z-<os>-<arch>` (`.exe` on Windows), `SHA256SUMS` |
-| Terraform provider | `terraform-provider-cqdcp/vX.Y.Z` | `terraform-provider-cqdcp X.Y.Z` | `terraform-provider-cqdcp_X.Y.Z_<os>_<arch>.zip`, `terraform-provider-cqdcp_X.Y.Z_SHA256SUMS` |
+| `cq` | `cq/vX.Y.Z` | `cq X.Y.Z` | `cq-vX.Y.Z-<os>-<arch>` (`.exe` on Windows), `SHA256SUMS`, `LICENSE`, `THIRD_PARTY_NOTICES` |
+| Terraform provider | `terraform-provider-cqdcp/vX.Y.Z` | `terraform-provider-cqdcp X.Y.Z` | `terraform-provider-cqdcp_X.Y.Z_<os>_<arch>.zip`, `terraform-provider-cqdcp_X.Y.Z_SHA256SUMS`, `LICENSE`, `THIRD_PARTY_NOTICES` |
 
 Platforms: `darwin_amd64`, `darwin_arm64` (Apple silicon), `linux_amd64`,
 `linux_arm64` and `windows_amd64`.
@@ -49,9 +50,11 @@ Platforms: `darwin_amd64`, `darwin_arm64` (Apple silicon), `linux_amd64`,
 A tool's version follows the API version of the control plane it was made
 for. Install the release whose version matches the API version of the region
 you use, or the newest release below it; your operator tells you which
-version the region runs. `cq` prints a warning when its minor version differs
-from the region's, and refuses to run when the major version differs. The
-binaries are not code-signed.
+version the region runs. `cq` compares its version with the region's API
+version: it prints a warning when the minor version or only the patch version
+differs, and runs the command; it refuses to run when the major version
+differs, unless you pass `--skip-version-check` or set
+`CQDCP_SKIP_VERSION_CHECK=1`. The binaries are not code-signed.
 
 ## Install `cq`
 
@@ -74,20 +77,20 @@ Check the download. The line for your file must say `OK`:
 shasum -a 256 -c --ignore-missing SHA256SUMS     # Linux: sha256sum -c --ignore-missing SHA256SUMS
 ```
 
+On macOS, a file downloaded with a web browser is quarantined, and macOS
+refuses to open the unsigned binary. A download with `curl` is not
+quarantined. If you used a browser, remove the quarantine flag from the
+downloaded file before you install it:
+
+```sh
+xattr -d com.apple.quarantine "cq-$V-$OS-$ARCH"
+```
+
 Put it on your `PATH` as `cq`, and check that it runs:
 
 ```sh
 sudo install -m 0755 "cq-$V-$OS-$ARCH" /usr/local/bin/cq   # or any directory on your PATH
 cq --version
-```
-
-On macOS, a file downloaded with a web browser is quarantined, and macOS
-refuses to open the unsigned binary. A download with `curl` is not
-quarantined. If you used a browser, remove the quarantine flag before you run
-it:
-
-```sh
-xattr -d com.apple.quarantine /usr/local/bin/cq
 ```
 
 ### Windows (PowerShell)
@@ -178,12 +181,14 @@ block, Terraform no longer looks in the mirror directories by itself, and you
 add the mirror to that block. The CLI configuration is `~/.terraformrc` on
 macOS and Linux, and `%APPDATA%\terraform.rc` on Windows; the
 `TF_CLI_CONFIG_FILE` environment variable can name another file. Give the
-mirror's full path:
+mirror's full path; Terraform does not expand `~` in it:
 
 ```hcl
 provider_installation {
   filesystem_mirror {
-    path    = "/Users/<you>/.terraform.d/plugins"     # Windows: "C:/Users/<you>/AppData/Roaming/terraform.d/plugins"
+    # Linux:   "/home/<you>/.terraform.d/plugins"
+    # Windows: "C:/Users/<you>/AppData/Roaming/terraform.d/plugins"
+    path    = "/Users/<you>/.terraform.d/plugins"   # macOS
     include = ["registry.terraform.io/cloudquarter/cqdcp"]
   }
   direct {
@@ -209,3 +214,21 @@ terraform providers lock -fs-mirror="$HOME/.terraform.d/plugins" \
   -platform=linux_amd64 -platform=windows_amd64 \
   registry.terraform.io/cloudquarter/cqdcp
 ```
+
+## Licences
+
+`cq` is distributed under the Apache License 2.0, and the Terraform provider
+under the Mozilla Public License 2.0. Every release carries, beside its
+binaries:
+
+- `LICENSE`, the full text of the tool's licence;
+- `THIRD_PARTY_NOTICES`, the Go standard library and each open-source Go
+  module compiled into the binaries of that release, with its version, the
+  name of its licence, where the licence is published and its full text,
+  followed by any NOTICE file the module carries.
+
+The binaries include the Go modules unmodified. For each module under the
+Mozilla Public License 2.0, such as several in the Terraform provider,
+`THIRD_PARTY_NOTICES` also gives where its source code is available: the
+module's public repository at that version, and the module's archive on the
+Go module proxy, `https://proxy.golang.org/<module>/@v/<version>.zip`.
