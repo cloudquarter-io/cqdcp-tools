@@ -21,12 +21,13 @@ limitations under the License.
 
 # cqdcp-tools
 
-Ready-to-use binaries of the client tools for the cloudquarter.io
-distributed control plane:
+Ready-to-use release files for the cloudquarter.io distributed control plane:
 
 - **`cq`**, the command-line interface;
 - **`terraform-provider-cqdcp`**, the Terraform provider, source address
-  `cloudquarter/cqdcp`.
+  `cloudquarter/cqdcp`;
+- the **Guided Exercises' files**: the Terraform configuration and the YAML
+  the chapters of the guide *Guided Exercises for Consumers* build from.
 
 This repository holds **release files only**. The source code is not here,
 and nothing in this repository needs to be built. Each binary is distributed
@@ -36,15 +37,16 @@ Terraform provider under the Mozilla Public License 2.0. See
 
 ## Releases
 
-Each tool is released under its own tag prefix, with one GitHub Release per
+Each kind of release has its own tag prefix, with one GitHub Release per
 tag:
 
-| Tool | Tag | Release title | Files |
+| Release | Tag | Release title | Files |
 |---|---|---|---|
 | `cq` | `cq/vX.Y.Z` | `cq X.Y.Z` | `cq-vX.Y.Z-<os>-<arch>` (`.exe` on Windows), `SHA256SUMS`, `LICENSE`, `THIRD_PARTY_NOTICES` |
 | Terraform provider | `terraform-provider-cqdcp/vX.Y.Z` | `terraform-provider-cqdcp X.Y.Z` | `terraform-provider-cqdcp_X.Y.Z_<os>_<arch>.zip`, `terraform-provider-cqdcp_X.Y.Z_SHA256SUMS`, `LICENSE`, `THIRD_PARTY_NOTICES` |
+| Guided Exercises' files | `guided-exercises/vX.Y.Z` | `guided-exercises X.Y.Z` | `guided-exercises-X.Y.Z.tar.gz`, `SHA256SUMS` |
 
-Platforms: `darwin_amd64`, `darwin_arm64` (Apple silicon), `linux_amd64`,
+Platforms of the two tools: `darwin_amd64`, `darwin_arm64` (Apple silicon), `linux_amd64`,
 `linux_arm64` and `windows_amd64`.
 
 A tool's version follows the API version of the control plane it was made
@@ -55,6 +57,9 @@ version: it prints a warning when the minor version or only the patch version
 differs, and runs the command; it refuses to run when the major version
 differs, unless you pass `--skip-version-check` or set
 `CQDCP_SKIP_VERSION_CHECK=1`. The binaries are not code-signed.
+
+The Guided Exercises' files follow the guide instead: download the version
+the guide's laptop setup names.
 
 ## Install `cq`
 
@@ -218,14 +223,17 @@ terraform providers lock -fs-mirror="$HOME/.terraform.d/plugins" \
 ## Licences
 
 `cq` is distributed under the Apache License 2.0, and the Terraform provider
-under the Mozilla Public License 2.0. Every release carries, beside its
-binaries:
+under the Mozilla Public License 2.0. Every release of either tool carries,
+beside its binaries:
 
 - `LICENSE`, the full text of the tool's licence;
 - `THIRD_PARTY_NOTICES`, the Go standard library and each open-source Go
   module compiled into the binaries of that release, with its version, the
   name of its licence, where the licence is published and its full text,
   followed by any NOTICE file the module carries.
+
+The Guided Exercises' files are cloudquarter.io's and carry its proprietary
+notice; their release has no `LICENSE` or `THIRD_PARTY_NOTICES` of its own.
 
 The binaries include the Go modules unmodified. For each module under the
 Mozilla Public License 2.0, such as several in the Terraform provider,
