@@ -26,13 +26,16 @@ distributed control plane:
 
 - **`cq`**, the command-line interface;
 - **`terraform-provider-cqdcp`**, the Terraform provider, source address
-  `cloudquarter/cqdcp`.
+  `cloudquarter/cqdcp`;
+- the **Guided Exercises' files**: the Terraform configuration and the YAML
+  the chapters of the guide *Guided Exercises for Consumers* build from.
 
 This repository holds **release files only**. The source code is not here,
 and nothing in this repository needs to be built. Each binary is distributed
 under the licence of its own project: `cq` under the Apache License 2.0, the
 Terraform provider under the Mozilla Public License 2.0. See
-[Licences](#licences).
+[Licences](#licences). The Guided Exercises' files are cloudquarter.io's,
+under the notice each file carries.
 
 ## Releases
 
@@ -43,6 +46,7 @@ tag:
 |---|---|---|---|
 | `cq` | `cq/vX.Y.Z` | `cq X.Y.Z` | `cq-vX.Y.Z-<os>-<arch>` (`.exe` on Windows), `SHA256SUMS`, `LICENSE`, `THIRD_PARTY_NOTICES` |
 | Terraform provider | `terraform-provider-cqdcp/vX.Y.Z` | `terraform-provider-cqdcp X.Y.Z` | `terraform-provider-cqdcp_X.Y.Z_<os>_<arch>.zip`, `terraform-provider-cqdcp_X.Y.Z_SHA256SUMS`, `LICENSE`, `THIRD_PARTY_NOTICES` |
+| Guided Exercises' files | `guided-exercises/vX.Y.Z` | `guided-exercises X.Y.Z` | `guided-exercises-X.Y.Z.tar.gz`, `SHA256SUMS` |
 
 Platforms: `darwin_amd64`, `darwin_arm64` (Apple silicon), `linux_amd64`,
 `linux_arm64` and `windows_amd64`.
@@ -55,6 +59,9 @@ version: it prints a warning when the minor version or only the patch version
 differs, and runs the command; it refuses to run when the major version
 differs, unless you pass `--skip-version-check` or set
 `CQDCP_SKIP_VERSION_CHECK=1`. The binaries are not code-signed.
+
+The Guided Exercises' files follow the guide instead: install the version its
+laptop setup names.
 
 ## Install `cq`
 
